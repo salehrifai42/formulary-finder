@@ -92,31 +92,55 @@ const ALL_COLUMNS = [
     id: 'dispenseModeNormalized',
     header: 'Dispense Mode',
     cell: info => info.getValue() || '—',
+    filterFn: (row, columnId, filterValue) =>
+      !filterValue || row.getValue(columnId) === filterValue,
   }),
   columnHelper.accessor('packagePricePublic', {
     id: 'packagePricePublic',
     header: 'Package Price (Public)',
     cell: info => price(info.getValue()),
+    filterFn: (row, columnId, filterValue) => {
+      if (!filterValue) return true
+      const v = row.getValue<number | null>(columnId)
+      return v !== null && v >= Number(filterValue)
+    },
   }),
   columnHelper.accessor('packagePricePharmacy', {
     id: 'packagePricePharmacy',
     header: 'Package Price (Pharmacy)',
     cell: info => price(info.getValue()),
+    filterFn: (row, columnId, filterValue) => {
+      if (!filterValue) return true
+      const v = row.getValue<number | null>(columnId)
+      return v !== null && v >= Number(filterValue)
+    },
   }),
   columnHelper.accessor('unitPricePublic', {
     id: 'unitPricePublic',
     header: 'Unit Price (Public)',
     cell: info => price(info.getValue()),
+    filterFn: (row, columnId, filterValue) => {
+      if (!filterValue) return true
+      const v = row.getValue<number | null>(columnId)
+      return v !== null && v >= Number(filterValue)
+    },
   }),
   columnHelper.accessor('unitPricePharmacy', {
     id: 'unitPricePharmacy',
     header: 'Unit Price (Pharmacy)',
     cell: info => price(info.getValue()),
+    filterFn: (row, columnId, filterValue) => {
+      if (!filterValue) return true
+      const v = row.getValue<number | null>(columnId)
+      return v !== null && v >= Number(filterValue)
+    },
   }),
   columnHelper.accessor('status', {
     id: 'status',
     header: 'Status',
     cell: info => info.getValue() || '—',
+    filterFn: (row, columnId, filterValue) =>
+      !filterValue || row.getValue(columnId) === filterValue,
   }),
   columnHelper.accessor('deleteEffectiveDate', {
     id: 'deleteEffectiveDate',
@@ -149,16 +173,31 @@ const ALL_COLUMNS = [
     id: 'thiqaMaxReimbursement',
     header: 'Thiqa Max. Reimbursement',
     cell: info => price(info.getValue()),
+    filterFn: (row, columnId, filterValue) => {
+      if (!filterValue) return true
+      const v = row.getValue<number | null>(columnId)
+      return v !== null && v >= Number(filterValue)
+    },
   }),
   columnHelper.accessor('thiqaCopay', {
     id: 'thiqaCopay',
     header: 'Thiqa Co-pay',
     cell: info => price(info.getValue()),
+    filterFn: (row, columnId, filterValue) => {
+      if (!filterValue) return true
+      const v = row.getValue<number | null>(columnId)
+      return v !== null && v >= Number(filterValue)
+    },
   }),
   columnHelper.accessor('basicCopay', {
     id: 'basicCopay',
     header: 'Basic Co-pay',
     cell: info => price(info.getValue()),
+    filterFn: (row, columnId, filterValue) => {
+      if (!filterValue) return true
+      const v = row.getValue<number | null>(columnId)
+      return v !== null && v >= Number(filterValue)
+    },
   }),
   columnHelper.accessor('uppEffectiveDate', {
     id: 'uppEffectiveDate',
@@ -330,23 +369,6 @@ export function ResultsTable({ result, loading, page, onPageChange, onSortChange
     getFilteredRowModel: getFilteredRowModel(),
     manualPagination: true,
     manualSorting: true,
-    filterFns: {
-      // numeric: filter rows where value >= filter
-      numericGte: (row, columnId, filterValue) => {
-        const v = row.getValue<number | null>(columnId)
-        if (v === null) return false
-        return v >= Number(filterValue)
-      },
-    },
-  })
-
-  // Apply numeric filter function to numeric columns
-  ALL_COLUMNS.forEach(col => {
-    const id = col.id
-    if (id && NUMERIC_COLS.has(id)) {
-      const column = table.getColumn(id)
-      if (column) column.columnDef.filterFn = 'numericGte' as never
-    }
   })
 
   const visibleColumnCount = table.getVisibleLeafColumns().length
@@ -355,7 +377,7 @@ export function ResultsTable({ result, loading, page, onPageChange, onSortChange
   const exportCSV = () => {
     if (!result?.data.length) return
     const visibleCols = table.getVisibleLeafColumns()
-    const rows = filteredRows.length > 0 ? filteredRows.map(r => r.original) : result.data
+    const rows = filteredRows.map(r => r.original)
     const headers = visibleCols.map(c => String(c.columnDef.header ?? c.id))
     const csvRows = rows.map(d =>
       visibleCols.map(col => {

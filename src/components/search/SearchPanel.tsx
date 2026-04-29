@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Search, X, Filter } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -35,6 +35,11 @@ interface Props {
 
 export function SearchPanel({ filters, dosageForms, onChange, onReset }: Props) {
   const [priceRange, setPriceRange] = useState([0, 500])
+
+  // Sync slider when price filters are cleared externally
+  useEffect(() => {
+    if (!filters.minPrice && !filters.maxPrice) setPriceRange([0, 500])
+  }, [filters.minPrice, filters.maxPrice])
 
   const update = (partial: Partial<DrugFilters>) => onChange({ ...filters, ...partial })
 

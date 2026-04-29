@@ -42,20 +42,11 @@ export default function Home() {
   const { status, uploading, error: uploadError, uploadFile } = useDataset()
   const { data: result, loading } = useDrugSearch(filters, page, 50, { sortBy, sortDir })
 
-  // Load dosage forms once on mount from a large sample
   useEffect(() => {
-    fetch('/api/drugs?pageSize=200&page=1')
+    fetch('/api/meta')
       .then(r => r.json())
-      .then(data => {
-        if (data?.data) {
-          const forms = [...new Set<string>(
-            data.data.map((d: import('@/types/drug').DrugRecord) => d.dosageForm).filter(Boolean)
-          )].sort()
-          setDosageForms(forms)
-        }
-      })
+      .then(data => { if (data?.dosageForms) setDosageForms(data.dosageForms) })
       .catch(() => {})
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const handleFiltersChange = (f: DrugFilters) => {
