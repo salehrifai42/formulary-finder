@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { parseBuffer, parseVersionInfo } from '@/lib/csv-parser'
-import { setDrugStore } from '@/lib/drug-store'
+import { setDrugStore, saveUploadedFile, saveUploadMeta } from '@/lib/drug-store'
 
 export const dynamic = 'force-dynamic'
 
@@ -35,7 +35,13 @@ export async function POST(request: NextRequest) {
     }
 
     const versionInfo = parseVersionInfo(buffer)
-    setDrugStore(rows, file.name, versionInfo)
+    const uploadedAt = new Date().toISOString()
+
+    // Persist to disk so uploads survive server restarts
+    saveUploadedFile(buffer, ext)
+    saveUploadMeta({ filename: file.name, uploadedAt })
+
+    setDrugStore(rows, file.name, { ...versionInfo, uploadedAt })
 
     const activeCount = rows.filter(r => r.status === 'Active').length
 
@@ -44,7 +50,7 @@ export async function POST(request: NextRequest) {
       filename: file.name,
       rowCount: rows.length,
       activeCount,
-      uploadedAt: new Date().toISOString(),
+      uploadedAt,
       ...versionInfo,
     })
   } catch (error) {
