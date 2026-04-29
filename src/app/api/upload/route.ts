@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { parseBuffer } from '@/lib/csv-parser'
+import { parseBuffer, parseVersionInfo } from '@/lib/csv-parser'
 import { setDrugStore } from '@/lib/drug-store'
 
 export const dynamic = 'force-dynamic'
@@ -34,7 +34,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'File parsed but contained no data rows.' }, { status: 400 })
     }
 
-    setDrugStore(rows, file.name)
+    const versionInfo = parseVersionInfo(buffer)
+    setDrugStore(rows, file.name, versionInfo)
 
     const activeCount = rows.filter(r => r.status === 'Active').length
 
@@ -44,6 +45,7 @@ export async function POST(request: NextRequest) {
       rowCount: rows.length,
       activeCount,
       uploadedAt: new Date().toISOString(),
+      ...versionInfo,
     })
   } catch (error) {
     console.error('POST /api/upload error:', error)

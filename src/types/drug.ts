@@ -65,4 +65,6 @@ export interface StoreStatus {
   rowCount: number
   activeCount: number
   uploadedAt?: string
+  releaseDate?: string
+  effectiveDate?: string
 }

@@ -1,6 +1,6 @@
 import fs from 'fs'
 import path from 'path'
-import { parseBuffer } from './csv-parser'
+import { parseBuffer, parseVersionInfo } from './csv-parser'
 import type { DrugRecord, StoreStatus } from '@/types/drug'
 
 interface DrugStore {
@@ -21,9 +21,12 @@ function buildIndexes(rows: DrugRecord[]): Pick<DrugStore, 'dosageForms' | 'disp
 }
 
 function initStore(): DrugStore {
+  const xlsxPath = path.join(process.cwd(), 'public', 'data', 'Drugs_bundled.xlsx')
   const csvPath = path.join(process.cwd(), 'public', 'data', 'Drugs_bundled.csv')
-  const buffer = fs.readFileSync(csvPath)
+  const filePath = fs.existsSync(xlsxPath) ? xlsxPath : csvPath
+  const buffer = fs.readFileSync(filePath)
   const rows = parseBuffer(buffer)
+  const versionInfo = parseVersionInfo(buffer)
   const activeRows = rows.filter(r => r.status === 'Active')
   const indexes = buildIndexes(activeRows)
 
@@ -35,6 +38,8 @@ function initStore(): DrugStore {
       source: 'bundled',
       rowCount: rows.length,
       activeCount: activeRows.length,
+      releaseDate: versionInfo.releaseDate,
+      effectiveDate: versionInfo.effectiveDate,
     },
   }
 }
@@ -46,7 +51,11 @@ export function getDrugStore(): DrugStore {
   return store
 }
 
-export function setDrugStore(rows: DrugRecord[], filename: string): void {
+export function setDrugStore(
+  rows: DrugRecord[],
+  filename: string,
+  versionInfo?: { releaseDate?: string; effectiveDate?: string }
+): void {
   const activeRows = rows.filter(r => r.status === 'Active')
   const indexes = buildIndexes(activeRows)
   store = {
@@ -59,6 +68,8 @@ export function setDrugStore(rows: DrugRecord[], filename: string): void {
       rowCount: rows.length,
       activeCount: activeRows.length,
       uploadedAt: new Date().toISOString(),
+      releaseDate: versionInfo?.releaseDate,
+      effectiveDate: versionInfo?.effectiveDate,
     },
   }
 }

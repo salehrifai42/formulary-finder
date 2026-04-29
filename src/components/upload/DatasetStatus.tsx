@@ -33,6 +33,9 @@ export function DatasetStatus({ status }: Props) {
             {status.activeCount.toLocaleString()} active drugs
           </Badge>
         </div>
+        {status.effectiveDate && (
+          <p className="text-xs text-muted-foreground mt-0.5">Effective: {status.effectiveDate}</p>
+        )}
         {date && (
           <p className="text-xs text-muted-foreground mt-0.5">Uploaded {date}</p>
         )}
