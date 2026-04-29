@@ -110,14 +110,14 @@ export function SearchPanel({ filters, dosageForms, onChange, onReset }: Props) 
       <div className="space-y-2">
         <Label className="text-xs uppercase tracking-wider text-muted-foreground">Dosage Form</Label>
         <Select
-          value={filters.dosageForm ?? '__all__'}
-          onValueChange={(v: string | null | undefined) => update({ dosageForm: (v && v !== '__all__') ? v : undefined })}
+          value={filters.dosageForm ?? null}
+          onValueChange={(v: string | null) => update({ dosageForm: (v && v !== '__clear__') ? v : undefined })}
         >
           <SelectTrigger className="h-8 text-sm">
             <SelectValue placeholder="All forms" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="__all__">All forms</SelectItem>
+            <SelectItem value="__clear__">All forms</SelectItem>
             {dosageForms.map(f => (
               <SelectItem key={f} value={f}>{f}</SelectItem>
             ))}
@@ -129,14 +129,14 @@ export function SearchPanel({ filters, dosageForms, onChange, onReset }: Props) 
       <div className="space-y-2">
         <Label className="text-xs uppercase tracking-wider text-muted-foreground">Dispense Mode</Label>
         <Select
-          value={filters.dispenseMode ?? '__all__'}
-          onValueChange={(v: string | null | undefined) => update({ dispenseMode: (v && v !== '__all__') ? v : undefined })}
+          value={filters.dispenseMode ?? null}
+          onValueChange={(v: string | null) => update({ dispenseMode: (v && v !== '__clear__') ? v : undefined })}
         >
           <SelectTrigger className="h-8 text-sm">
             <SelectValue placeholder="All modes" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="__all__">All modes</SelectItem>
+            <SelectItem value="__clear__">All modes</SelectItem>
             {DISPENSE_MODES.map(m => (
               <SelectItem key={m} value={m}>{m}</SelectItem>
             ))}

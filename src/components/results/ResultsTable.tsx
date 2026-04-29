@@ -250,12 +250,12 @@ function ColumnFilterInput({
 
   if (CATEGORICAL[colId]) {
     return (
-      <Select value={value || '__all__'} onValueChange={(v: string | null) => onChange((v && v !== '__all__') ? v : '')}>
+      <Select value={value || null} onValueChange={(v: string | null) => onChange((v && v !== '__clear__') ? v : '')}>
         <SelectTrigger className="h-6 text-xs px-1.5 border-0 bg-muted/50 focus:ring-0 min-w-0 w-full">
           <SelectValue placeholder="All" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="__all__">All</SelectItem>
+          <SelectItem value="__clear__">All</SelectItem>
           {CATEGORICAL[colId].map(opt => (
             <SelectItem key={opt} value={opt}>{opt}</SelectItem>
           ))}
