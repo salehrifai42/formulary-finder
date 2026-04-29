@@ -15,6 +15,7 @@ import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
@@ -284,7 +285,7 @@ export function ResultsTable({ result, loading, page, onPageChange, onSortChange
               {COLUMN_GROUPS.map(group => {
                 const groupCols = ALL_COLUMNS.filter(c => (c.meta as { group: string })?.group === group)
                 return (
-                  <div key={group}>
+                  <DropdownMenuGroup key={group}>
                     <DropdownMenuLabel className="text-xs text-muted-foreground">{group}</DropdownMenuLabel>
                     {groupCols.map(col => {
                       const column = table.getColumn(col.id!)
@@ -300,7 +301,7 @@ export function ResultsTable({ result, loading, page, onPageChange, onSortChange
                       )
                     })}
                     <DropdownMenuSeparator />
-                  </div>
+                  </DropdownMenuGroup>
                 )
               })}
             </DropdownMenuContent>
