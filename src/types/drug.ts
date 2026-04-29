@@ -41,6 +41,9 @@ export interface DrugFilters {
   dispenseMode?: string
   minPrice?: number
   maxPrice?: number
+  manufacturer?: string
+  agent?: string
+  status?: Array<'Active' | 'Deleted' | 'Grace'>
 }
 
 export interface DrugSearchParams extends DrugFilters {

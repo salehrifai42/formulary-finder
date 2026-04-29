@@ -32,6 +32,9 @@ export function filterAndPaginate(
     dispenseMode,
     minPrice,
     maxPrice,
+    manufacturer,
+    agent,
+    status,
     page = 1,
     pageSize = 50,
     sortBy = 'packageName',
@@ -39,6 +42,8 @@ export function filterAndPaginate(
   } = params
 
   const tokens = q ? tokenize(q) : []
+  const manufacturerTokens = manufacturer ? tokenize(manufacturer) : []
+  const agentTokens = agent ? tokenize(agent) : []
 
   let filtered = rows.filter(row => {
     if (tokens.length > 0 && !matchesText(row, tokens)) return false
@@ -50,6 +55,17 @@ export function filterAndPaginate(
     }
     if (maxPrice !== undefined && maxPrice !== null) {
       if ((row.unitPricePublic ?? 0) > maxPrice) return false
+    }
+    if (manufacturerTokens.length > 0) {
+      const hay = row.manufacturerName.toLowerCase()
+      if (!manufacturerTokens.every(t => hay.includes(t))) return false
+    }
+    if (agentTokens.length > 0) {
+      const hay = row.agentName.toLowerCase()
+      if (!agentTokens.every(t => hay.includes(t))) return false
+    }
+    if (status && status.length > 0) {
+      if (!status.includes(row.status as 'Active' | 'Deleted' | 'Grace')) return false
     }
     return true
   })

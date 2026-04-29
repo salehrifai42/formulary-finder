@@ -15,9 +15,6 @@ import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { CoverageBadges } from './CoverageBadge'
@@ -39,174 +36,166 @@ function price(v: number | null) {
   return v !== null ? `AED ${v.toFixed(2)}` : '—'
 }
 
+// Columns in original sheet order
 const ALL_COLUMNS = [
-  columnHelper.accessor('packageName', {
-    id: 'packageName',
-    header: 'Package Name',
-    cell: info => <span className="font-medium">{info.getValue()}</span>,
-    meta: { group: 'Core' },
-  }),
-  columnHelper.accessor('genericName', {
-    id: 'genericName',
-    header: 'Generic Name',
-    cell: info => <span className="text-muted-foreground">{info.getValue()}</span>,
-    meta: { group: 'Core' },
-  }),
-  columnHelper.accessor('strength', {
-    id: 'strength',
-    header: 'Strength',
-    cell: info => info.getValue() || '—',
-    meta: { group: 'Core' },
-  }),
-  columnHelper.accessor('dosageForm', {
-    id: 'dosageForm',
-    header: 'Dosage Form',
-    cell: info => info.getValue() || '—',
-    meta: { group: 'Core' },
-  }),
-  columnHelper.accessor('packageSize', {
-    id: 'packageSize',
-    header: 'Pack Size',
-    cell: info => info.getValue() || '—',
-    meta: { group: 'Core' },
-  }),
-  columnHelper.accessor('dispenseModeNormalized', {
-    id: 'dispenseModeNormalized',
-    header: 'Dispense Mode',
-    cell: info => info.getValue() || '—',
-    meta: { group: 'Core' },
-  }),
-  // Pricing
-  columnHelper.accessor('unitPricePublic', {
-    id: 'unitPricePublic',
-    header: 'Unit Price (Public)',
-    cell: info => price(info.getValue()),
-    meta: { group: 'Pricing' },
-  }),
-  columnHelper.accessor('packagePricePublic', {
-    id: 'packagePricePublic',
-    header: 'Pack Price (Public)',
-    cell: info => price(info.getValue()),
-    meta: { group: 'Pricing' },
-  }),
-  columnHelper.accessor('unitPricePharmacy', {
-    id: 'unitPricePharmacy',
-    header: 'Unit Price (Pharmacy)',
-    cell: info => price(info.getValue()),
-    meta: { group: 'Pricing' },
-  }),
-  columnHelper.accessor('packagePricePharmacy', {
-    id: 'packagePricePharmacy',
-    header: 'Pack Price (Pharmacy)',
-    cell: info => price(info.getValue()),
-    meta: { group: 'Pricing' },
-  }),
-  // Coverage
-  columnHelper.display({
-    id: 'coverage',
-    header: 'Coverage',
-    cell: info => <CoverageBadges drug={info.row.original} />,
-    meta: { group: 'Coverage' },
-  }),
-  columnHelper.accessor('thiqaMaxReimbursement', {
-    id: 'thiqaMaxReimbursement',
-    header: 'Thiqa Max Reimburse',
-    cell: info => price(info.getValue()),
-    meta: { group: 'Coverage' },
-  }),
-  columnHelper.accessor('thiqaCopay', {
-    id: 'thiqaCopay',
-    header: 'Thiqa Co-pay',
-    cell: info => price(info.getValue()),
-    meta: { group: 'Coverage' },
-  }),
-  columnHelper.accessor('basicCopay', {
-    id: 'basicCopay',
-    header: 'Basic Co-pay',
-    cell: info => price(info.getValue()),
-    meta: { group: 'Coverage' },
-  }),
-  // Supply chain
-  columnHelper.accessor('manufacturerName', {
-    id: 'manufacturerName',
-    header: 'Manufacturer',
-    cell: info => <span className="text-muted-foreground text-xs">{info.getValue() || '—'}</span>,
-    meta: { group: 'Supply' },
-  }),
-  columnHelper.accessor('agentName', {
-    id: 'agentName',
-    header: 'Agent',
-    cell: info => <span className="text-muted-foreground text-xs">{info.getValue() || '—'}</span>,
-    meta: { group: 'Supply' },
-  }),
-  // Admin
   columnHelper.accessor('drugCode', {
     id: 'drugCode',
     header: 'Drug Code',
     cell: info => <span className="font-mono text-xs">{info.getValue() || '—'}</span>,
-    meta: { group: 'Admin' },
+  }),
+  columnHelper.accessor('insurancePlan', {
+    id: 'insurancePlan',
+    header: 'Insurance Plan',
+    cell: info => info.getValue() || '—',
+  }),
+  columnHelper.accessor('packageName', {
+    id: 'packageName',
+    header: 'Package Name',
+    cell: info => <span className="font-medium">{info.getValue()}</span>,
   }),
   columnHelper.accessor('genericCode', {
     id: 'genericCode',
     header: 'Generic Code',
     cell: info => <span className="font-mono text-xs">{info.getValue() || '—'}</span>,
-    meta: { group: 'Admin' },
   }),
-  columnHelper.accessor('lastChangeDate', {
-    id: 'lastChangeDate',
-    header: 'Last Changed',
-    cell: info => <span className="text-xs">{info.getValue() || '—'}</span>,
-    meta: { group: 'Admin' },
+  columnHelper.accessor('genericName', {
+    id: 'genericName',
+    header: 'Generic Name',
+    cell: info => <span className="text-muted-foreground">{info.getValue()}</span>,
   }),
-  columnHelper.accessor('uppEffectiveDate', {
-    id: 'uppEffectiveDate',
-    header: 'Price Effective',
-    cell: info => <span className="text-xs">{info.getValue() || '—'}</span>,
-    meta: { group: 'Admin' },
+  columnHelper.accessor('strength', {
+    id: 'strength',
+    header: 'Strength',
+    cell: info => info.getValue() || '—',
   }),
-  columnHelper.accessor('uppExpiryDate', {
-    id: 'uppExpiryDate',
-    header: 'Price Expiry',
-    cell: info => <span className="text-xs">{info.getValue() || '—'}</span>,
-    meta: { group: 'Admin' },
+  columnHelper.accessor('dosageForm', {
+    id: 'dosageForm',
+    header: 'Dosage Form',
+    cell: info => info.getValue() || '—',
+  }),
+  columnHelper.accessor('packageSize', {
+    id: 'packageSize',
+    header: 'Package Size',
+    cell: info => info.getValue() || '—',
+  }),
+  columnHelper.accessor('dispenseModeNormalized', {
+    id: 'dispenseModeNormalized',
+    header: 'Dispense Mode',
+    cell: info => info.getValue() || '—',
+  }),
+  columnHelper.accessor('packagePricePublic', {
+    id: 'packagePricePublic',
+    header: 'Package Price (Public)',
+    cell: info => price(info.getValue()),
+  }),
+  columnHelper.accessor('packagePricePharmacy', {
+    id: 'packagePricePharmacy',
+    header: 'Package Price (Pharmacy)',
+    cell: info => price(info.getValue()),
+  }),
+  columnHelper.accessor('unitPricePublic', {
+    id: 'unitPricePublic',
+    header: 'Unit Price (Public)',
+    cell: info => price(info.getValue()),
+  }),
+  columnHelper.accessor('unitPricePharmacy', {
+    id: 'unitPricePharmacy',
+    header: 'Unit Price (Pharmacy)',
+    cell: info => price(info.getValue()),
   }),
   columnHelper.accessor('status', {
     id: 'status',
     header: 'Status',
+    cell: info => info.getValue() || '—',
+  }),
+  columnHelper.accessor('deleteEffectiveDate', {
+    id: 'deleteEffectiveDate',
+    header: 'Delete Effective Date',
     cell: info => <span className="text-xs">{info.getValue() || '—'}</span>,
-    meta: { group: 'Admin' },
+  }),
+  columnHelper.accessor('lastChangeDate', {
+    id: 'lastChangeDate',
+    header: 'Last Change Date',
+    cell: info => <span className="text-xs">{info.getValue() || '—'}</span>,
+  }),
+  columnHelper.accessor('agentName', {
+    id: 'agentName',
+    header: 'Agent Name',
+    cell: info => <span className="text-muted-foreground text-xs">{info.getValue() || '—'}</span>,
+  }),
+  columnHelper.accessor('manufacturerName', {
+    id: 'manufacturerName',
+    header: 'Manufacturer Name',
+    cell: info => <span className="text-muted-foreground text-xs">{info.getValue() || '—'}</span>,
+  }),
+  columnHelper.display({
+    id: 'coverage',
+    header: 'Coverage',
+    cell: info => <CoverageBadges drug={info.row.original} />,
+  }),
+  columnHelper.accessor('thiqaMaxReimbursement', {
+    id: 'thiqaMaxReimbursement',
+    header: 'Thiqa Max. Reimbursement',
+    cell: info => price(info.getValue()),
+  }),
+  columnHelper.accessor('thiqaCopay', {
+    id: 'thiqaCopay',
+    header: 'Thiqa Co-pay',
+    cell: info => price(info.getValue()),
+  }),
+  columnHelper.accessor('basicCopay', {
+    id: 'basicCopay',
+    header: 'Basic Co-pay',
+    cell: info => price(info.getValue()),
+  }),
+  columnHelper.accessor('uppEffectiveDate', {
+    id: 'uppEffectiveDate',
+    header: 'UPP Effective Date',
+    cell: info => <span className="text-xs">{info.getValue() || '—'}</span>,
+  }),
+  columnHelper.accessor('uppUpdatedDate', {
+    id: 'uppUpdatedDate',
+    header: 'UPP Updated Date',
+    cell: info => <span className="text-xs">{info.getValue() || '—'}</span>,
+  }),
+  columnHelper.accessor('uppExpiryDate', {
+    id: 'uppExpiryDate',
+    header: 'UPP Expiry Date',
+    cell: info => <span className="text-xs">{info.getValue() || '—'}</span>,
   }),
 ]
 
-// Columns visible by default
+// Default visible columns — key ones on first load
 const DEFAULT_VISIBILITY: VisibilityState = {
+  drugCode: false,
+  insurancePlan: false,
   packageName: true,
+  genericCode: false,
   genericName: true,
   strength: true,
   dosageForm: true,
   packageSize: false,
   dispenseModeNormalized: true,
-  unitPricePublic: true,
   packagePricePublic: true,
-  unitPricePharmacy: false,
   packagePricePharmacy: false,
+  unitPricePublic: true,
+  unitPricePharmacy: false,
+  status: false,
+  deleteEffectiveDate: false,
+  lastChangeDate: false,
+  agentName: false,
+  manufacturerName: false,
   coverage: true,
   thiqaMaxReimbursement: false,
   thiqaCopay: false,
   basicCopay: false,
-  manufacturerName: false,
-  agentName: false,
-  drugCode: false,
-  genericCode: false,
-  lastChangeDate: false,
   uppEffectiveDate: false,
+  uppUpdatedDate: false,
   uppExpiryDate: false,
-  status: false,
 }
 
 const SORTABLE = ['packageName', 'genericName', 'unitPricePublic', 'packagePricePublic', 'unitPricePharmacy', 'lastChangeDate']
 
-const COLUMN_GROUPS = ['Core', 'Pricing', 'Coverage', 'Supply', 'Admin'] as const
 
 function SortIcon({ col, sortBy, sortDir }: { col: string; sortBy: string; sortDir: string }) {
   if (sortBy !== col) return <ChevronsUpDown className="ml-1 h-3 w-3 opacity-40" />
@@ -281,27 +270,18 @@ export function ResultsTable({ result, loading, page, onPageChange, onSortChange
               Columns
               <span className="ml-1 text-xs text-muted-foreground">({visibleColumnCount})</span>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-52 max-h-[400px] overflow-y-auto">
-              {COLUMN_GROUPS.map(group => {
-                const groupCols = ALL_COLUMNS.filter(c => (c.meta as { group: string })?.group === group)
+            <DropdownMenuContent align="end" className="w-56 max-h-[400px] overflow-y-auto">
+              {ALL_COLUMNS.map(col => {
+                const column = table.getColumn(col.id!)
+                if (!column) return null
                 return (
-                  <DropdownMenuGroup key={group}>
-                    <DropdownMenuLabel className="text-xs text-muted-foreground">{group}</DropdownMenuLabel>
-                    {groupCols.map(col => {
-                      const column = table.getColumn(col.id!)
-                      if (!column) return null
-                      return (
-                        <DropdownMenuCheckboxItem
-                          key={col.id}
-                          checked={column.getIsVisible()}
-                          onCheckedChange={v => column.toggleVisibility(!!v)}
-                        >
-                          {String(col.header ?? col.id)}
-                        </DropdownMenuCheckboxItem>
-                      )
-                    })}
-                    <DropdownMenuSeparator />
-                  </DropdownMenuGroup>
+                  <DropdownMenuCheckboxItem
+                    key={col.id}
+                    checked={column.getIsVisible()}
+                    onCheckedChange={v => column.toggleVisibility(!!v)}
+                  >
+                    {String(col.header ?? col.id)}
+                  </DropdownMenuCheckboxItem>
                 )
               })}
             </DropdownMenuContent>
